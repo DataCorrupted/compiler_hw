@@ -167,7 +167,11 @@ I worked with: (Name,ID), (Name,ID)...
 	DFA:
 	\\
 	\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
-		%% Your answer here
+		\node[state, initial] 	(S0) 						{$S_0$}
+		\node[state, accepting] (S1) [above, right=of S0]	{$S_1$}
+		\node[state] 			(S2) [right = of S0] 		{$S_2$}
+		\node[state, accepting] (S3) 	{$S_3$}
+		\node[state, accepting] (S4) 	{$S_4$}
 	\end{tikzpicture}
 	\item Original NFA, $\Sigma = \{a, b,c\}$:
 	\\
@@ -201,8 +205,12 @@ Examples of strings that should be accepted by this NFA: abbabbbbaa, baabaaabaaa
 Examples of strings that should \textbf{not} be accepted: ababb, abbbabba.
 	\\
 	\\
+		Now I already knows that I can construct even As and Bs respectively:
+		$	L_a = b^*(ab^*a)^*  $
+		$	L_b = a^*(ba^*b)^*  $
+		But the problem is how can I use DFA to do $ L_a \cap L_b$?
 	\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
-		%% Your answer here
+
 	\end{tikzpicture}
 
   \newpage
