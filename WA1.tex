@@ -146,7 +146,13 @@ I worked with: (Name,ID), (Name,ID)...
 	DFA:
 	\\
 	\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto]
-		%% Your answer here
+		\node[state, initial] 	(s0) 						{$S_0$};
+		\node[state] 			(s1) [right=of s0] 			{$S_1$};
+		\node[state] 			(s2) [above right=of s1] 	{$S_2$};
+		\node[state] 			(s3) [below right=of s1] 	{$S_3$};
+		\node[state] 			(s6) [right=of s1] 			{$S_6$};
+		\node[state] 			(s5) [right=of s6] 			{$S_5$};
+		\node[state] 			(s4) [above right=of s5] 	{$S_4$};
 	\end{tikzpicture}
 	\item Original NFA, $\Sigma = \{a, b, c\}$:
 	\\
@@ -177,7 +183,7 @@ I worked with: (Name,ID), (Name,ID)...
 				edge 	[bend right]	node 	[below]		{b, c}	(S2)
 		(S1) 	edge 	[bend left] 	node 	[below] 	{c} 	(S0)
 				edge 	[loop above] 	node 	[above]		{a}		()
-				edge 					node 	{b} 				(S3)
+				edge 					node 				{b}		(S3)
 		(S2) 	edge 	[loop below] 	node 	[below] 	{b, c} 	()
 				edge 					node 				{a} 	(S4)
 		(S3) 	edge 	[bend left] 	node 	[above] 	{c} 	(S0)
