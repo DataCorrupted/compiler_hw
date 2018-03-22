@@ -205,12 +205,12 @@ I worked with: (Name,ID), (Name,ID)...
 				edge 	[bend right]	node 	[below]		{b, c}	(S2)
 		(S1) 	edge 	[bend left] 	node 	[below] 	{c} 	(S0)
 				edge 	[loop above] 	node 	[above]		{a}		()
-				edge 					node 				{b}		(S3)
+				edge 	[bend left]		node 				{b}		(S3)
 		(S2) 	edge 	[loop below] 	node 	[below] 	{b, c} 	()
-				edge 					node 				{a} 	(S4)
+				edge 	[bend right]	node 	[below]		{a} 	(S4)
 		(S3) 	edge 	[bend left] 	node 	[above] 	{c} 	(S0)
 				edge 	[loop above] 	node 	[above] 	{b} 	()
-				edge 					node 	[right]	 	{a} 	(S4)
+				edge 	[bend left]		node 	[left]	 	{a} 	(S4)
 		(S4) 	edge 	[loop below] 	node 	[below] 	{b} 	() 	
 				edge 	[bend right] 	node 	[below] 	{c} 	(S0);
 	\end{tikzpicture}
@@ -236,7 +236,27 @@ I worked with: (Name,ID), (Name,ID)...
 	DFA:
 	\\
 	\begin{tikzpicture}[shorten >=1pt,node distance=2.6cm,on grid,auto]
-		%% Your answer here
+		\node[state, initial] 	(s0) 						{$S_0$};
+		\node[state] 			(s3) [right=of s0] 			{$S_3$};
+		\node[state, accepting] (s1) [above right=of s3] 	{$S_1$};
+		\node[state, accepting] (s2) [below right=of s3] 	{$S_2$};
+		\node[state] 			(s5) [above right=of s2] 	{$S_5$};
+		\node[state, accepting] (s4) [right=of s5] 			{$S_4$};
+		\path[->]
+		(s0) 	edge 	[bend left] 	node 	[above] 	{a} 	(s1)
+				edge 	[bend right] 	node 	[below] 	{b}		(s2)
+		(s1) 	edge 	[bend right] 	node 	[left]	 	{b}		(s2)
+				edge 	[bend right] 	node 	[above] 	{a} 	(s3)
+				edge 	[bend left] 	node 	[above] 	{c} 	(s4)
+		(s2)	edge 	[bend right]	node 	[right] 	{a} 	(s1)
+				edge	[bend right] 	node 	[below] 	{b} 	(s5)
+				edge 	[bend right] 	node 	[below] 	{c} 	(s4)
+		(s3) 	edge 	[loop left] 	node 	[left] 		{a} 	()
+				edge 	[bend right] 	node 	[below]		{b}		(s2)
+		(s5) 	edge	[bend right] 	node 	[above] 	{a} 	(s1)
+				edge 	[loop right] 	node 	[right] 	{b} 	()
+		(s4) 	edge 	[loop right] 	node 	[right] 	{c} 	();
+
 	\end{tikzpicture}
   \end{enumerate}
 
