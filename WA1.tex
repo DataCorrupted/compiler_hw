@@ -98,7 +98,15 @@ I worked with: (Name,ID), (Name,ID)...
 	\item $L_2$.
 	\\
 	\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
-		%% Your answer here
+		\node[state, initial] 	(s0) 						{$S_0$};
+		\node[state] 			(s1) 	[above right=of s0]	{$S_1$};
+		\node[state] 			(s2) 	[below right=of s0]	{$S_2$};
+		\node[state]			(s3) 	[above right=of s1] {$S_3$};
+		\node[state] 			(s4) 	[below right=of s1] {$S_4$};
+		\node[state] 			(s5) 	[below right=of s2] {$S_5$};
+		\node[state] 			(s7) 	[right=of s5]		{$S_7$};
+		\node[state] 			(s6) 	[right=of s4] 		{$S_6$};
+		\node[state]			(s8) 	[right=of s6] 		{$S_8$};
 	\end{tikzpicture}
 	\item $L_3$.
 	\\
