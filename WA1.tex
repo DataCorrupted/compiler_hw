@@ -296,7 +296,14 @@ Examples of strings that should \textbf{not} be accepted: ababb, abbbabba.
    \\
 	\\
 	\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
-		%% Your answer here
+		\node[state, initial] 	(s0) 						{$S_0$};
+		\node[state] 			(s1) [right=of s0] 			{$S_1$};
+		\node[state, accepting] (s2) [right=of s1] 			{$S_2$};
+		\path[->]
+		(s0) 	edge 	node 	[above] 	{a, b} 	(s1)
+		(s1) 	edge 	node 	[above]	 	{c}		(s2)
+				edge 	[loop above] 	node 	[above] 	{a, b} 	()
+		(s2)	edge 	[loop above]		node 	[above] 		{c} 	();
 	\end{tikzpicture}
 
 \end{enumerate}
