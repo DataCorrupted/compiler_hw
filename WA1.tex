@@ -70,7 +70,7 @@ I worked with: (Name,ID), (Name,ID)...
 			\]
 		   \item $L_4$: The set of all finite strings which does not contain subsequence $100$.
 			\[
-			L_4 = 0^*(1^*0)^*
+			L_4 = 0^*(1^+0)^*1^*
 			\]
    \end{enumerate}
    This example illustrates that regular languages are closed under intersection. Note that
@@ -133,7 +133,7 @@ I worked with: (Name,ID), (Name,ID)...
 	\\
 	\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
 		\node[state, initial] 	(s0) 					{$s_0$};
-		\node[state] 			(s1) 	[right=of s0] 	{$s_1$};
+		\node[state, accepting]	(s1) 	[right=of s0] 	{$s_1$};
 		\node[state, accepting] (s2) 	[right=of s1] 	{$s_2$};
 		\path[->]
 			(s0) 	edge 	[loop above] 	node 	{0} 	()
