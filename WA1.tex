@@ -291,11 +291,25 @@ Examples of strings that should \textbf{not} be accepted: ababb, abbbabba.
 	\\
 	\\
 		Now I already knows that I can construct even As and Bs respectively:
-		$	L_a = b^*(ab^*a)^*  $
-		$	L_b = a^*(ba^*b)^*  $
-		But the problem is how can I use DFA to do $ L_a \cap L_b$?
-	\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+		$$	L_a = b^*(ab^*a)^*  $$
+		$$	L_b = a^*(ba^*b)^*  $$
+		But the problem is how can I use NFA to do $ L_a \cap L_b$? \\
 
+		Yet a more sufficient way is to draw a DFA directly, which I suppose belongs to NFA.\\
+	\begin{tikzpicture}[shorten >=1pt,node distance=5cm,on grid,auto]
+		\node[state, initial, accepting] 	(s0) 		{Even a, even b};
+		\node[state] 	(s1)	[above right=of s0]		{Odd a, even b};
+		\node[state]	(s2) 	[below right=of s0]		{Even a, odd b};
+		\node[state] 	(s3) 	[below right=of s1] 	{Odd a, Odd b};
+		\path[->]
+		(s0)	edge 	[bend left] 	node 	[above] 	{a} 	(s1)
+				edge 	[bend left]		node 	[above]		{b}	 	(s2)
+		(s1) 	edge	[bend left] 	node 	[below] 	{a}		(s0)
+				edge 	[bend left]		node 	[above]		{b}		(s3)
+		(s2) 	edge 	[bend left] 	node 	[below] 	{b}	 	(s0)
+				edge 	[bend left]		node 	[above] 	{a}		(s3)
+		(s3)	edge 	[bend left]		node 	[above] 	{a} 	(s2)
+				edge 	[bend left]		node 	[below] 	{b}		(s1);
 	\end{tikzpicture}
 
   \newpage
@@ -321,7 +335,7 @@ Examples of strings that should \textbf{not} be accepted: ababb, abbbabba.
 	\\
 	\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
 		\node[state, initial] 	(s0) 						{$S_0$};
-		\node[state] 			(s1) [right=of s0] 			{$S_1$};
+		\node[state, accepting]	(s1) [right=of s0] 			{$S_1$};
 		\node[state, accepting] (s2) [right=of s1] 			{$S_2$};
 		\path[->]
 		(s0) 	edge 	node 	[above] 	{a, b} 	(s1)
