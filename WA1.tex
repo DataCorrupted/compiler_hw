@@ -1,7 +1,7 @@
 \documentclass[10pt]{article}
 \usepackage[pdftex]{graphicx, color}
 \usepackage{listings}
-
+\usepackage{amsmath}
 \usepackage{tikz}
 \usetikzlibrary{automata,positioning}
 
@@ -65,9 +65,12 @@ I worked with: (Name,ID), (Name,ID)...
 		   L_2 = 111(0+1)^* + (10+01)10^*1(0+1)^* + 001(0^*1)^2(0+1)^*
 			\]
 		   \item $L_3$: The set of all finite strings containing at most three $0's$ and at least two $1's$.
-			\[
-			%% Your answer here
-			\]
+			\begin{equation}\begin{aligned}
+			L_3 & = 11(1^*0?)^31^* + 1(1^*0?)1(1^*0?)^21^* + 1(1^*0?)^21(1^*0?)1^*  \\
+				& + 1(1^*0?)^311^* + (1^*0?)11(1^*0?)^21^* +  (1^*0?)1(1^*0?)1(1^*0?)1^* \\
+				& + (1^*0?)1(1^*0?)^211^* + (1^*0?)^211(1^*0?)1^* + (1^*0?)^21(1^*0?)11^* \\
+				& + (1^*0?)^3111^*
+			\end{aligned}\end{equation}
 		   \item $L_4$: The set of all finite strings which does not contain subsequence $100$.
 			\[
 			L_4 = 0^*(1^+0)^*1^*
@@ -174,8 +177,7 @@ I worked with: (Name,ID), (Name,ID)...
 		\node[state, accepting]	(s1) [right=of s0] 			{$S_1$};
 		\node[state] 			(s2) [above right=of s1] 	{$S_2$};
 		\node[state] 			(s3) [below right=of s1] 	{$S_3$};
-		\node[state, accepting]	(s6) [right=of s1] 			{$S_6$};
-		\node[state, accepting]	(s5) [right=of s6] 			{$S_5$};
+		\node[state, accepting]	(s5) [below right=of s2] 	{$S_5$};
 		\node[state, accepting]	(s4) [right=of s5] 			{$S_4$};
 		\path[->]
 		(s0)	edge					node 				{a} 	(s1)
@@ -191,13 +193,10 @@ I worked with: (Name,ID), (Name,ID)...
 				edge 	[bend right]	node 				{b}		(s5)
 				edge 	[loop below] 	node 	[below]		{c} 	()
 		(s5) 	edge 	[loop above] 	node 	[below]		{b} 	()
-				edge 	[bend right] 	node 	[above] 	{a}		(s1)
-				edge 	[bend left]		node 	[below]		{c} 	(s6)
-		(s6) 	edge 	[bend left] 	node 	[above] 	{a}		(s1)
-				edge 					node 				{b}		(s5)
-				edge 	[bend left] 	node 				{c}		(s3)
+				edge 	[bend left] 	node 	[above] 	{a}		(s1)
+				edge 	[bend right]	node 	[above]		{c} 	(s4)
 		(s4) 	edge 	[bend right] 	node 	[above] 	{a}		(s1)
-				edge 					node 	[above] 	{b}		(s5)
+				edge 	[bend right]	node 	[below] 	{b}		(s5)
 				edge 	[bend left]		node 	[below] 	{c}		(s3);
  	\end{tikzpicture}
 	\item Original NFA, $\Sigma = \{a, b, c\}$:
@@ -333,15 +332,28 @@ Examples of strings that should \textbf{not} be accepted: ababb, abbbabba.
   \item \pts{$5$} Draw the minimal DFA of the DFA constructed in Question 4(c).
    \\
 	\\
-	\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+	\begin{tikzpicture}[shorten >=1pt,node distance=2.6cm,on grid,auto]
 		\node[state, initial] 	(s0) 						{$S_0$};
-		\node[state, accepting]	(s1) [right=of s0] 			{$S_1$};
-		\node[state, accepting] (s2) [right=of s1] 			{$S_2$};
+		\node[state] 			(s3) [right=of s0] 			{$S_3$};
+		\node[state, accepting] (s1) [above right=of s3] 	{$S_1$};
+		\node[state, accepting] (s2) [below right=of s3] 	{$S_2$};
+		\node[state] 			(s5) [above right=of s2] 	{$S_5$};
+		\node[state, accepting] (s4) [right=of s5] 			{$S_4$};
 		\path[->]
-		(s0) 	edge 	node 	[above] 	{a, b} 	(s1)
-		(s1) 	edge 	node 	[above]	 	{c}		(s2)
-				edge 	[loop above] 	node 	[above] 	{a, b} 	()
-		(s2)	edge 	[loop above]		node 	[above] 		{c} 	();
+		(s0) 	edge 	[bend left] 	node 	[above] 	{a} 	(s1)
+				edge 	[bend right] 	node 	[below] 	{b}		(s2)
+		(s1) 	edge 	[bend right] 	node 	[left]	 	{b}		(s2)
+				edge 	[bend right] 	node 	[above] 	{a} 	(s3)
+				edge 	[bend left] 	node 	[above] 	{c} 	(s4)
+		(s2)	edge 	[bend right]	node 	[right] 	{a} 	(s1)
+				edge	[bend right] 	node 	[below] 	{b} 	(s5)
+				edge 	[bend right] 	node 	[below] 	{c} 	(s4)
+		(s3) 	edge 	[loop left] 	node 	[left] 		{a} 	()
+				edge 	[bend right] 	node 	[below]		{b}		(s2)
+		(s5) 	edge	[bend right] 	node 	[above] 	{a} 	(s1)
+				edge 	[loop right] 	node 	[right] 	{b} 	()
+		(s4) 	edge 	[loop right] 	node 	[right] 	{c} 	();
+
 	\end{tikzpicture}
 
 \end{enumerate}
