@@ -3,6 +3,7 @@
 \usepackage{listings}
 \usepackage{fancybox}
 \usepackage{tikz}
+\usepackage{multirow}
 \usepackage{amsmath}
 \usetikzlibrary{automata,positioning}
 
@@ -41,13 +42,13 @@ I worked with: (Name,ID), (Name,ID)...
   \begin{enumerate}
            \item The set of all finite strings over the alphabet $\{0,1\}$ with an equal number of 0's and 1's.
             \[
-            A \rightarrow 0A1A | 1A0A | \epsilon
+            A \rightarrow 0A1A \mid 1A0A \mid \epsilon
             \]
            \item The set of all finite strings over the alphabet $\{0,1\}$ with the number of 0's greater than the number of 1's.
             \begin{equation*}\begin{aligned}
-            & S \rightarrow Equal Zeros Equal | Equal Zeros Equal S \\
-            & Equal \rightarrow 0Equal1Equal | 1Equal0Equal | \epsilon \\
-            & Zeros \rightarrow 0 | 0Zeros \\
+            & S \rightarrow Equal Zeros Equal \mid Equal Zeros Equal S \\
+            & Equal \rightarrow 0Equal1Equal \mid 1Equal0Equal \mid \epsilon \\
+            & Zeros \rightarrow 0 \mid 0Zeros \\
             \end{aligned}\end{equation*}
            \item The set $L_3=L_1\cap L_2$, where $L_1$ and $L_2$ are defined below.
            Let $L_1$ be the finite strings consisting of all non-empty \emph{palindromes} over the alphabet $\{a,b\}$. That is $L_1$
@@ -55,7 +56,7 @@ I worked with: (Name,ID), (Name,ID)...
            Let $L_2$ be the language over  $\{a,b\}$ representing the language of the regular expression $b(a+b)^\ast$.
             \begin{equation*}\begin{aligned}
             & S \rightarrow bPb \\
-            & P \rightarrow aPa | bPb | \epsilon \\
+            & P \rightarrow aPa \mid bPb \mid \epsilon \\
             \end{aligned}\end{equation*}
   \end{enumerate}
   \newpage
@@ -174,12 +175,27 @@ C & \rightarrow & \epsilon \mid -ABc
 \begin{enumerate}
   \item Compute the First and Follow sets for the grammar.
             \begin{equation*}\begin{aligned}
-            %% Your answer here
+            & FIRST(A) = \{[, a\} \\
+            & FIRST(C) = \{\epsilon, -\} \\
+            & FIRST(B) = \{\epsilon, +, -, b\} \\
+            & \\
+            & FOLLOW(A) = \{+, -, b, c, \$\}\\
+            & FOLLOW(B) = \{], c\} \\
+            & FOLLOW(C) = \{], b, c\}
             \end{aligned}\end{equation*}
-  \item Give the LL(1) parsing table for the grammar.
-             \begin{equation*}\begin{aligned}
-            %% Your answer here
-            \end{aligned}\end{equation*}
+  \item Give the LL(1) parsing table for the grammar.\\
+	\begin{table}[h]
+	\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+		\hline
+		\multirow{2}{*}{NT} & \multicolumn{8}{c|}{Input} \\ \cline{2-9} 
+		                    &  [ & ] & a & + & - & b & c & $\$$\\ \hline
+		A                   &  $A\rightarrow [AB]$ &   & $A\rightarrow a$ &   &   &   &   & \\ \hline
+		B                   &    & $B\rightarrow \epsilon$ &   & $B\rightarrow +AC$ & $B\rightarrow Cb$ & $B\rightarrow Cb$ & $B\rightarrow \epsilon$ & \\ \hline
+		C                   &    & $C\rightarrow \epsilon$ &   &   & $C\rightarrow -ABc$ & $C\rightarrow \epsilon$ & $C\rightarrow \epsilon$ & \\ \hline
+		\end{tabular}
+	\end{table}
+
   \item Is this grammar LL(1)? and Why.
              \begin{equation*}\begin{aligned}
             %% Your answer here
@@ -263,22 +279,44 @@ U & \rightarrow & x\mid y\mid [S]
 $S$, $T$, and $U$ are nonterminals, while others are terminals.
 \begin{enumerate}
   \item Left-factor this grammar.
-            \begin{equation*}\begin{aligned}
-            %% Your answer here
-            \end{aligned}\end{equation*}
+		\[\begin{array}{cll}
+		S & \rightarrow & T;S \mid \epsilon \\
+		T & \rightarrow & UT'  \\
+		T' & \rightarrow & \star T \mid \epsilon\\
+		U & \rightarrow & x\mid y\mid [S]
+		\end{array}\]
   \item Give the First and Follow sets for each nonterminal in the grammar obtained in part (a).
             \begin{equation*}\begin{aligned}
-            %% Your answer here
+			& FIRST(S) = \{x, y, [, \epsilon\} \\
+			& FIRST(T) = \{x, y, [\} \\
+			& FIRST(T') = \{\star, \epsilon\} \\
+			& FIRST(U) = \{x, y, [\} \\
+			& \\
+			& FOLLOW(S) = \{\$, ]\} \\
+			& FOLLOW(T) = \{;\} \\
+			& FOLLOW(T') = \{;\} \\
+			& FOLLOW(U) = \{;, \star\} \\
             \end{aligned}\end{equation*}
   \item Using this information, construct an LL(1) parsing table for the grammar obtained in part (a).
-            \begin{equation*}\begin{aligned}
-            %% Your answer here
-            \end{aligned}\end{equation*}
+
+	\begin{table}[h]
+		\centering
+		\caption{My caption}
+		\label{my-label}
+		\begin{tabular}{|c|c|c|c|c|c|c|c|}
+		\hline
+		\multirow{2}{*}{NT} & \multicolumn{7}{c|}{Input} \\ \cline{2-8} 
+		                    & [ & ] & x & y & ; & $\star$ & \$  \\ \hline
+		S                   & $S \rightarrow T;S$ & $S \rightarrow \epsilon$ & $S \rightarrow T;S$ & $S \rightarrow T;S$ &  &  & $S \rightarrow \epsilon$  \\ \hline
+		T                   & $T \rightarrow UT'$ &  & $T \rightarrow UT'$ & $T \rightarrow UT'$ &  &  &  \\ \hline
+		T'                  &  &  &  &  & $T' \rightarrow \epsilon$ & $T' \rightarrow \star T$ &  \\ \hline
+		U                   & $U\rightarrow[S]$ &  & $U\rightarrow x$ & $U\rightarrow y$ &  &  &  \\ \hline
+		\end{tabular}
+	\end{table}
+
   \item Suppose we generated an LL(1) parser for the grammar using the table you constructed. What would go wrong if it tried to parse the following input string?
-  \[[x;y]\star [;\]
-            \begin{equation*}\begin{aligned}
-            %% Your answer here
-            \end{aligned}\end{equation*}
+  \[[x;y]\star [;\] \\
+  		It will raise an error when encountered the last semi-colon, as it is in state $S$ and a semi-colon(;) is an illegal input.
 \end{enumerate}
 
 \newpage
