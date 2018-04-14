@@ -191,15 +191,14 @@ C & \rightarrow & \epsilon \mid -ABc
 		\multirow{2}{*}{NT} & \multicolumn{8}{c|}{Input} \\ \cline{2-9} 
 		                    &  [ & ] & a & + & - & b & c & $\$$\\ \hline
 		A                   &  $A\rightarrow [AB]$ &   & $A\rightarrow a$ &   &   &   &   & \\ \hline
-		B                   &    & $B\rightarrow \epsilon$ &   & $B\rightarrow +AC$ & $B\rightarrow Cb$ & $B\rightarrow Cb$ & $B\rightarrow \epsilon$ & \\ \hline
+		\multirow{2}{*}{B}  &    & $B\rightarrow \epsilon$ &   & $B\rightarrow +AC$ & $B\rightarrow Cb$ & $B\rightarrow Cb$ & $B\rightarrow \epsilon$& \\ 
+							&    & $B\rightarrow Cb$       & & & & & $B\rightarrow Cb$ & \\\hline
 		C                   &    & $C\rightarrow \epsilon$ &   &   & $C\rightarrow -ABc$ & $C\rightarrow \epsilon$ & $C\rightarrow \epsilon$ & \\ \hline
 		\end{tabular}
 	\end{table}
 
-  \item Is this grammar LL(1)? and Why.
-             \begin{equation*}\begin{aligned}
-            %% Your answer here
-            \end{aligned}\end{equation*}
+  \item Is this grammar LL(1)? and Why. \\
+  		No, it's not LL(1) due to two production conflicts in the table.
 \end{enumerate}
 \newpage
 \item \pts{$8$}  Using the context-free grammar for Cool given in Section 11 of the Cool
