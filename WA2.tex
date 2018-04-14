@@ -1,7 +1,7 @@
 \documentclass[10pt]{article}
 \usepackage[pdftex]{graphicx, color}
 \usepackage{listings}
-
+\usepackage{fancybox}
 \usepackage{tikz}
 \usepackage{amsmath}
 \usetikzlibrary{automata,positioning}
@@ -65,12 +65,39 @@ regular expressions over alphabet $\{a, b\}$:
 \begin{enumerate}
   \item Using the above CFG, provide a right-most derivation for the following input string $(a+(ba)^\ast b)^\ast$.
             \begin{equation*}\begin{aligned}
-            %% Your answer here
+            R & \Rightarrow R^* \\
+              & \Rightarrow (R)^* \\
+              & \Rightarrow (R + R)^* \\
+              & \Rightarrow (R + RR)^* \Rightarrow (R + Rb)^* \\
+              & \Rightarrow (R + R^*b)^* \\
+              & \Rightarrow (R + (R)^*b)^* \\
+              & \Rightarrow (R + (RR)^*b)^* \\
+              & \Rightarrow (R + (Ra)^*b)^* \Rightarrow (R + (ba)^*b)^* \Rightarrow (a + (ba)^*b)^* \\
             \end{aligned}\end{equation*}
-  \item For the derivation in above solution, provide the corresponding parse tree.
-            \begin{equation*}\begin{aligned}
-            %% Your answer here
-            \end{aligned}\end{equation*}
+  \item For the derivation in above solution, provide the corresponding parse tree.\\
+	\begin{center}\begin{tikzpicture}[sibling distance=5em, level distance=2em]
+		\node(root){R}
+			child{node{R}
+				child{node{(}}
+				child{node{R}
+					child{node{R}
+						child{node{a}}}
+					child{node{+}}
+					child{node{R}
+						child{node{R}
+							child{node{R}
+								child{node{(}}
+								child{node{R}
+									child{node{R}
+										child{node{b}}}
+									child{node{R}
+										child{node{a}}}}
+								child{node{)}}}
+							child{node{*}}}
+						child{node{b}}}}
+				child{node{)}}}
+			child{node{*}};
+	\end{tikzpicture}\end{center}
 \end{enumerate}
 
 
@@ -94,10 +121,34 @@ F & \rightarrow & aFd \mid BC
             %% Your answer here
             \end{aligned}\end{equation*}
 \item Is the grammar as given ambiguous? If yes, give an example of an expression
-with two parse trees under this grammar. If not, explain why that is the case.
-            \begin{equation*}\begin{aligned}
-            adbc
-            \end{aligned}\end{equation*}
+with two parse trees under this grammar. If not, explain why that is the case.\\\\
+            $adbc$ is a good example with two parsing trees:
+\begin{center}
+\begin{tabular}{c|c}
+            \begin{tikzpicture}[sibling distance=5em, level distance=2em]
+            \node(root){S}
+            	child{node{A}
+            		child{node{a}}}
+            	child{node{E}
+            		child{node{b}}
+            		child{node{c}}}
+            	child{node{D}
+            		child{node{d}}};
+            \end{tikzpicture} 
+            & 
+            \begin{tikzpicture}[sibling distance=5em, level distance=2em]
+            \node(root){S}
+            	child{node{F}
+            		child{node{a}}
+            		child{node{F}
+            			child{node{B}
+            				child{node{b}}}
+            			child{node{C}
+            				child{node{c}}}}
+            		child{node{d}}};
+            \end{tikzpicture}
+\end{tabular}
+\end{center}
 \item Transform the CFG given above by eliminating ambiguity and
 left recursion, if needed.
             \begin{equation*}\begin{aligned}
@@ -138,10 +189,54 @@ manual, draw a parse tree for the following expression.
   \end{lstlisting}
 Note that the context-free grammar by itself is ambiguous, so you will
 need to use the precedence and associativity rules in Section 11.1 to
-get the correct tree.
-            \begin{equation*}\begin{aligned}
-            %% Your answer here
-            \end{aligned}\end{equation*}
+get the correct tree. \\
+        \begin{center}\begin{tikzpicture}[sibling distance=2em, level distance=3em]
+        \node(root){expr}
+        	child{node{\textbf{while}}}
+        	child{node{expr}
+        		child{node{\textbf{not}}}
+        		child{node{expr}
+        			child{node{(}}
+        			child{node{expr}
+        				child{node{\textbf{ID}}}
+        				child{node{$<-$}}
+        				child{node{expr}
+        					child{node{\textbf{ID}}}
+        					child{node{$<-$}}
+        					child{node{expr}
+        						child{node{\textbf{integer}}}
+        					}
+        				}
+        			}
+        			child{node{)}}
+        		}
+        	}
+        	child{node{\textbf{loop}}}
+        	child{node{expr}
+        		child{node{\textbf{ID}}}
+				child{node{$<-$}}
+				child{node{expr}
+					child{node{expr}
+						child{node{\textbf{integer}}}}
+					child{node{+}}
+					child{node{expr}
+						child{node{expr}
+							child{node{expr}
+								child{node{\textbf{integer}}}
+							}
+							child{node{*}}
+							child{node{expr}
+								child{node{\textbf{integer}}}
+							}
+						}
+						child{node{+}}
+						child{node{expr}
+							child{node{\textbf{integer}}}}}
+				}
+        	}
+        	child{node{\textbf{pool}}};
+
+        \end{tikzpicture}\end{center}
 
 \newpage
 \item \pts{$4\times 4 =16$} Consider the following grammar describing a certain sort of nested lists:
