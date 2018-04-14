@@ -58,6 +58,7 @@ I worked with: (Name,ID), (Name,ID)...
             & P \rightarrow aPa | bPb | \epsilon \\
             \end{aligned}\end{equation*}
   \end{enumerate}
+  \newpage
   %
   \item \pts{$3\times 2= 6$} Consider the following CFG with terminals $\{(,),+,*,a,b\}$ ($+$ represents union) that is used to represent
 regular expressions over alphabet $\{a, b\}$:
@@ -75,7 +76,7 @@ regular expressions over alphabet $\{a, b\}$:
               & \Rightarrow (R + (Ra)^*b)^* \Rightarrow (R + (ba)^*b)^* \Rightarrow (a + (ba)^*b)^* \\
             \end{aligned}\end{equation*}
   \item For the derivation in above solution, provide the corresponding parse tree.\\
-	\begin{center}\begin{tikzpicture}[sibling distance=5em, level distance=2em]
+	\begin{center}\begin{tikzpicture}[sibling distance=5em, level distance=2.5em]
 		\node(root){R}
 			child{node{R}
 				child{node{(}}
@@ -125,7 +126,7 @@ with two parse trees under this grammar. If not, explain why that is the case.\\
             $adbc$ is a good example with two parsing trees:
 \begin{center}
 \begin{tabular}{c|c}
-            \begin{tikzpicture}[sibling distance=5em, level distance=2em]
+            \begin{tikzpicture}[sibling distance=5em, level distance=4em]
             \node(root){S}
             	child{node{A}
             		child{node{a}}}
@@ -136,7 +137,12 @@ with two parse trees under this grammar. If not, explain why that is the case.\\
             		child{node{d}}};
             \end{tikzpicture} 
             & 
-            \begin{tikzpicture}[sibling distance=5em, level distance=2em]
+            \begin{tikzpicture}[
+            	level 1/.style={sibling distance=5em, level distance=2em},
+            	level 2/.style={sibling distance=5em, level distance=2em},
+            	level 3/.style={sibling distance=5em, level distance=2em},
+            	level 4/.style={sibling distance=5em, level distance=2em},
+            ]
             \node(root){S}
             	child{node{F}
             		child{node{a}}
@@ -179,7 +185,7 @@ C & \rightarrow & \epsilon \mid -ABc
             %% Your answer here
             \end{aligned}\end{equation*}
 \end{enumerate}
-
+\newpage
 \item \pts{$8$}  Using the context-free grammar for Cool given in Section 11 of the Cool
 manual, draw a parse tree for the following expression.
   \begin{lstlisting}
@@ -190,19 +196,27 @@ manual, draw a parse tree for the following expression.
 Note that the context-free grammar by itself is ambiguous, so you will
 need to use the precedence and associativity rules in Section 11.1 to
 get the correct tree. \\
-        \begin{center}\begin{tikzpicture}[sibling distance=2em, level distance=3em]
+        \begin{center}\begin{tikzpicture}    [
+        level distance = 4em,
+	    level 1/.style={sibling distance=3cm},
+	    level 2/.style={sibling distance=2cm},
+	    level 3/.style={sibling distance=1.5cm},
+	    level 4/.style={sibling distance=1.5cm},
+	    level 5/.style={sibling distance=1.5cm},
+	    level 6/.style={sibling distance=1.5cm},
+    	]
         \node(root){expr}
         	child{node{\textbf{while}}}
         	child{node{expr}
         		child{node{\textbf{not}}}
-        		child{node{expr}
+        		child{node{expr}[below]
         			child{node{(}}
         			child{node{expr}
         				child{node{\textbf{ID}}}
-        				child{node{$<-$}}
+        				child{node{$\leftarrow$}}
         				child{node{expr}
         					child{node{\textbf{ID}}}
-        					child{node{$<-$}}
+        					child{node{$\leftarrow$}}
         					child{node{expr}
         						child{node{\textbf{integer}}}
         					}
@@ -214,12 +228,11 @@ get the correct tree. \\
         	child{node{\textbf{loop}}}
         	child{node{expr}
         		child{node{\textbf{ID}}}
-				child{node{$<-$}}
+				child{node{$\leftarrow$}}
 				child{node{expr}
 					child{node{expr}
-						child{node{\textbf{integer}}}}
-					child{node{+}}
-					child{node{expr}
+						child{node{expr}}
+						child{node{+}}
 						child{node{expr}
 							child{node{expr}
 								child{node{\textbf{integer}}}
@@ -229,9 +242,11 @@ get the correct tree. \\
 								child{node{\textbf{integer}}}
 							}
 						}
-						child{node{+}}
-						child{node{expr}
-							child{node{\textbf{integer}}}}}
+					}
+					child{node{+}}
+					child{node{expr}
+						child{node{\textbf{integer}}}
+					}
 				}
         	}
         	child{node{\textbf{pool}}};
