@@ -175,9 +175,15 @@ C & \rightarrow & \epsilon \mid -ABc
 \begin{enumerate}
   \item Compute the First and Follow sets for the grammar.
             \begin{equation*}\begin{aligned}
-            & FIRST(A) = \{[, a\} \\
-            & FIRST(C) = \{\epsilon, -\} \\
-            & FIRST(B) = \{\epsilon, +, -, b\} \\
+            & FIRST([AB]) = \{[\} \\
+            & FIRST(a) = a \\
+            & FIRST(A) = FIRST([AB])\cup FIRST(a) = \{[, a\} \\
+            & FIRST(\epsilon) = \{\epsilon\} \\
+            & FIRST(-ABc) = \{-\}\\
+            & FIRST(C) = FIRST(\epsilon) \cup FIRST(-ABc) = \{\epsilon, -\} \\
+            & FIRST(+AC) = \{+\}\\
+            & FIRST(Cb) = FIRST(C) = \{\epsilon, -\} \\
+            & FIRST(B) = FIRST(\epsilon) \cup FIRST(+AC) \cup FIRST(Cb) = \{\epsilon, +, -, b\} \\
             & \\
             & FOLLOW(A) = \{+, -, b, c, \$\}\\
             & FOLLOW(B) = \{], c\} \\
