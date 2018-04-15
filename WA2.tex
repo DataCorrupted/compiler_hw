@@ -177,10 +177,10 @@ left recursion, if needed.
 	time.
 	\[\begin{array}{cll}
 		S & \rightarrow & AED \mid F \\
-		A & \rightarrow & Aa \mid a \\
-		B & \rightarrow & Bb \mid b \\
-		C & \rightarrow & Cc \mid c \\
-		D & \rightarrow & Dd \mid d \\
+		A & \rightarrow & a \mid aA \\
+		B & \rightarrow & b \mid bB \\
+		C & \rightarrow & c \mid cC \\
+		D & \rightarrow & d \mid dD \\
 		E & \rightarrow & bEc \mid bc \\
 		F & \rightarrow & aFd \mid bE \mid Ec
 	\end{array}\]
