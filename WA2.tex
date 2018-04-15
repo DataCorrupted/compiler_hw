@@ -205,7 +205,7 @@ C & \rightarrow & \epsilon \mid -ABc
             & FIRST(-ABc) = \{-\}\\
             & FIRST(C) = FIRST(\epsilon) \cup FIRST(-ABc) = \{\epsilon, -\} \\
             & FIRST(+AC) = \{+\}\\
-            & FIRST(Cb) = FIRST(C) = \{\epsilon, -\} \\
+            & FIRST(Cb) = \{-, b\} \\
             & FIRST(B) = FIRST(\epsilon) \cup FIRST(+AC) \cup FIRST(Cb) = \{\epsilon, +, -, b\} \\
             & \\
             & FOLLOW(A) = \{+, -, b, c, \$\}\\
@@ -221,7 +221,7 @@ C & \rightarrow & \epsilon \mid -ABc
 		                    &  [ & ] & a & + & - & b & c & $\$$\\ \hline
 		A                   &  $A\rightarrow [AB]$ &   & $A\rightarrow a$ &   &   &   &   & \\ \hline
 		\multirow{2}{*}{B}  &    & $B\rightarrow \epsilon$ &   & $B\rightarrow +AC$ & $B\rightarrow Cb$ & $B\rightarrow Cb$ & $B\rightarrow \epsilon$& \\ 
-							&    & $B\rightarrow Cb$       & & & & & $B\rightarrow Cb$ & \\\hline
+							&    & & & & & & $B\rightarrow Cb$ & \\\hline
 		C                   &    & $C\rightarrow \epsilon$ &   &   & $C\rightarrow -ABc$ & $C\rightarrow \epsilon$ & $C\rightarrow \epsilon$ & \\ \hline
 		\end{tabular}
 	\end{table}
