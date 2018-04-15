@@ -220,14 +220,13 @@ C & \rightarrow & \epsilon \mid -ABc
 		\multirow{2}{*}{NT} & \multicolumn{8}{c|}{Input} \\ \cline{2-9} 
 		                    &  [ & ] & a & + & - & b & c & $\$$\\ \hline
 		A                   &  $A\rightarrow [AB]$ &   & $A\rightarrow a$ &   &   &   &   & \\ \hline
-		\multirow{2}{*}{B}  &    & $B\rightarrow \epsilon$ &   & $B\rightarrow +AC$ & $B\rightarrow Cb$ & $B\rightarrow Cb$ & $B\rightarrow \epsilon$& \\ 
-							&    & & & & & & $B\rightarrow Cb$ & \\\hline
+		B  &    & $B\rightarrow \epsilon$ &   & $B\rightarrow +AC$ & $B\rightarrow Cb$ & $B\rightarrow Cb$ & $B\rightarrow \epsilon$& \\  \hline
 		C                   &    & $C\rightarrow \epsilon$ &   &   & $C\rightarrow -ABc$ & $C\rightarrow \epsilon$ & $C\rightarrow \epsilon$ & \\ \hline
 		\end{tabular}
 	\end{table}
 
   \item Is this grammar LL(1)? and Why. \\ \\
-  		No, it's not LL(1) due to two production rules' conflicts in the table.
+  		Yes, it is LL(1). There is no conflicting production rules in the table. There are no two rules that can derive to the same string, each production rule can only produce to $\epsilon$ in one way and other rules don't lead to a beginning terminal in FOLLOW.\\
 \end{enumerate}
 \newpage
 \item \pts{$8$}  Using the context-free grammar for Cool given in Section 11 of the Cool
