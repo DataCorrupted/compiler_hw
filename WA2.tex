@@ -5,6 +5,7 @@
 \usepackage{tikz}
 \usepackage{multirow}
 \usepackage{amsmath}
+\usepackage{arydshln}
 \usetikzlibrary{automata,positioning}
 
 \headheight 8pt \headsep 20pt \footskip 30pt
@@ -352,30 +353,38 @@ items.
 		\node[state] (I0) { 
 			\parbox{2cm}{\begin{equation*}\begin{aligned}
 				& I_0: \\
+				& S' \rightarrow .S \\
 				& S\rightarrow .Xa \\
 				& X\rightarrow .a \\
 				& X\rightarrow .aXb \\
 			\end{aligned}\end{equation*}}
 		};
-		\node[state, right of=I0, node distance=3cm] (I1){
+
+		\node[state, right of=I0, node distance=3cm] (I2){
 			\parbox{2cm}{\begin{equation*}\begin{aligned}
-				& I_1: \\
+				& I_2: \\
 				& S\rightarrow X.a \\
 			\end{aligned}\end{equation*}}
 		};		
-		\node[state, right of=I1, node distance=3cm] (I2){
+		\node[state, above of=I2, node distance=2.5cm] (I1) { 
 			\parbox{2cm}{\begin{equation*}\begin{aligned}
-				& I_2: \\
-				& S\rightarrow Xa. \\
+				& I_1: \\
+				& S' \rightarrow S. \\
 			\end{aligned}\end{equation*}}
 		};
-		\node[state, right of=I2, node distance=3cm] (I6){
+
+		\node[state, right of=I1, node distance=3cm] (acc){
 			\parbox{2cm}{\begin{equation*}\begin{aligned}
-				& I_6: \\
 				& Accepted \\
 			\end{aligned}\end{equation*}}
 		};
-		\node[state, below of=I1, node distance=3cm] (I3){
+		\node[state, right of=I2, node distance=3cm] (I4){
+			\parbox{2cm}{\begin{equation*}\begin{aligned}
+				& I_4: \\
+				& S\rightarrow Xa. \\
+			\end{aligned}\end{equation*}}
+		};
+		\node[state, below of=I2, node distance=3cm] (I3){
 			\parbox{2cm}{\begin{equation*}\begin{aligned}
 				& I_3: \\
 				& X\rightarrow a. \\
@@ -383,37 +392,81 @@ items.
 				& X\rightarrow .aXb \\
 			\end{aligned}\end{equation*}}
 		};
-		\node[state, right of=I3, node distance=3cm] (I4){
+		\node[state, right of=I3, node distance=3cm] (I5){
 			\parbox{2cm}{\begin{equation*}\begin{aligned}
-				& I_4: \\
+				& I_5: \\
 				& X\rightarrow aX.b \\
 			\end{aligned}\end{equation*}}
 		};
-		\node[state, right of=I4, node distance=3cm] (I5){
+		\node[state, right of=I5, node distance=3cm] (I6){
 			\parbox{2cm}{\begin{equation*}\begin{aligned}
-				& I_5: \\
+				& I_6: \\
 				& X\rightarrow aXb. \\
 			\end{aligned}\end{equation*}}
 		};
 		\path[->]
-		(I0) 	edge 					node[above]{$X$} (I1)
+		(I0) 	edge 					node[above]{$X$} (I2)
 				edge 	[bend right] 	node[below]{$a$} (I3)
-		(I1) 	edge 					node[above]{$a$} (I2)
-		(I2) 	edge					node[above]{$\$$} (I6)
+				edge 	[bend left] 	node[above]{$S$} (I1)
+		(I1) 	edge 				 	node[above]{$\$$} (acc)
+		(I2) 	edge 					node[above]{$a$} (I4)
 		(I3) 	edge 	[loop below] 	node[below]{$a$} ()
-				edge 					node[below]{$X$} (I4)
-		(I4) 	edge 					node[below]{$b$} (I5);
+				edge 					node[below]{$X$} (I5)
+		(I5) 	edge 					node[below]{$b$} (I6);
+		
 	\end{tikzpicture}\end{center}
 \item Identify a shift-reduce conflict in this grammar under the
-SLR(1) rules.\\
+SLR(1) rules.\\ 
+	\begin{equation*}\begin{aligned}
+		& 1: S\rightarrow Xa  \\
+		& 2: X\rightarrow a \\		
+		& 3: X\rightarrow aXb \\
+	\end{aligned}\end{equation*}
+	\begin{table}[h]
+	\centering
+	\begin{tabular}{c|ccc|cc}
+		\hline
+		\multirow{2}{*}{State} & \multicolumn{3}{c|}{Actions} & \multicolumn{2}{c}{Goto} \\ \cline{2-6} 
+		                  &  $a$  &  $b$  &  $\$$ &    $S$    &    $X$    \\ \hline
+		       0          &   s3  &       &       &     s1    &     s2    \\
+		       1          &       &       &  acc  &           &           \\
+		       2          &   s4  &       &       &           &           \\
+		       3          & \textbf{s3/r2} &   r2  &       &           &     s5    \\
+		       4          &       &       &   r1  &           &           \\
+		       5          &       &   s6  &       &           &           \\
+		       6          &   r3  &   r3  &       &           &           \\ \hline	
+	\end{tabular}
+	\end{table}
+	\\
 	There is one in $I_3$ where the parser have to decide whether to reduce
 	$X\rightarrow a.$ or keep shifting if there is $X$ or $a$ incoming.
+	\\
 \item Assuming that an SLR(1) parser resolves shift-reduce conflicts
 by choosing to shift, show the operation of such a parser on the input
 string \textbf{aaba}.
-          \[
-            %% Your answer here
-            \]
+	\\
+	\begin{table}[h]
+	\begin{center}\begin{tabular}{l|r|l}
+	\textbf{Stack} & \textbf{Input} & \textbf{Action} \\ 
+	\$ & aaba\$ & shift \\ 
+	\$a & aba\$ & shift \\ 
+	\$aa & ba\$ & reduce by $X\rightarrow a$ \\ 
+	\$aX & ba\$ & shift \\ 
+	\$aXb & a\$ & reduce by $X\rightarrow aXb$ \\ 
+	\$X & a\$ & shift\\
+	\$Xa & \$ & reduce by $S\rightarrow Xa$ \\ 
+	\$S & \$ &  $Accepted$\\ 
+	\end{tabular}\end{center}
+%	\end{table}
+%	\begin{table}[h]
+%	\begin{center}\begin{tabular}{l|r|l}
+%	\textbf{Stack} & \textbf{Input} & \textbf{Action} \\ 
+%	\$ & aaba\$ & shift \\ 
+%	\$a & aba\$ & shift \\ 
+%	\$aa & ba\$ & error \\ 
+%	\end{tabular}\end{center}
+	\end{table}
+	\\
 \item Suppose that the production $X \rightarrow \varepsilon$ is added
 to this grammar.  Identify a reduce-reduce conflict in the resulting
 grammar under the SLR(1) rules.
