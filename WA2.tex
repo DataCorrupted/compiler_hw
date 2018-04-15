@@ -204,7 +204,7 @@ C & \rightarrow & \epsilon \mid -ABc
 	\end{table}
 
   \item Is this grammar LL(1)? and Why. \\
-  		No, it's not LL(1) due to two production conflicts in the table.
+  		No, it's not LL(1) due to two production rules' conflicts in the table.
 \end{enumerate}
 \newpage
 \item \pts{$8$}  Using the context-free grammar for Cool given in Section 11 of the Cool
@@ -252,7 +252,8 @@ get the correct tree. \\
 				child{node{$\leftarrow$}}
 				child{node{expr}
 					child{node{expr}
-						child{node{expr}}
+						child{node{expr}
+							child{node{\textbf{integer}}}}
 						child{node{+}}
 						child{node{expr}
 							child{node{expr}
