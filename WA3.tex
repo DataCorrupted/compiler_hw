@@ -1,9 +1,31 @@
 \documentclass[10pt]{article}
 \usepackage[pdftex]{graphicx, color}
 \usepackage{listings,proof}
-
+\usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{tikz}
 \usetikzlibrary{automata,positioning}
+
+\lstset{frame=none,
+	language=java,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=4
+}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
 
 \headheight 8pt \headsep 20pt \footskip 30pt
 \textheight 9in \textwidth 6.5in
@@ -16,7 +38,7 @@
 \newcommand{\ossimple}[6]{#1,#2,#3\vdash #4 : #5,#6}
 \newcommand{\osrule}[8]{\frac{#7}{\ossimple{#1}{#2}{#3}{#4}{#5}{#6}}\eqno
   \mbox{#8}}
-\newcommand{\infertext}[2]{\infer{{\textrm{#1}}}{#2}}
+\newcommand{\infertext}[2]{\infer{{\textrm{#2}}}{\begin{aligned}#1\end{aligned}}}
 
 \begin{document}
 \begin{center}
@@ -45,22 +67,26 @@ I worked with: (Name,ID), (Name,ID)...
 
 Example for type rule in tex:
 \[\infertext
-          {$O$[Bo/x][Ob/x] $\vdash$ x: Ob}
-          {\textrm{$O$[Bo/x][Ob/x](x) = Ob}}
+		  {& \textrm{$O$[Bo/x][Ob/x](x) = Ob} \\ & \textrm{$O$[Bo/x][Ob/x](x) = Ob}}
+		  {$O$[Bo/x][Ob/x] $\vdash$ x: Ob}
 \]
-
+\begin{equation}
+	\infertext
+		{\textrm{\infertext{Reason1}{Conclusion1} \infertext{Reason2}{Conclusion2}}}
+		{Conclusion}
+\end{equation}
 \begin{enumerate}
 \item (10 pts) Consider the following class definitions.
 \begin{verbatim}
   class A {
-    i: Int
-    o: Object
-    b: B <- new B
-    x: SELF_TYPE
-    f(): SELF_TYPE {x}
+	i: Int
+	o: Object
+	b: B <- new B
+	x: SELF_TYPE
+	f(): SELF_TYPE {x}
   }
   class B inherits A {
-    g(b: Bool): Object { (* EXPRESSION *) }
+	g(b: Bool): Object { (* EXPRESSION *) }
   }
 \end{verbatim}
 
@@ -77,11 +103,50 @@ cannot be applied.
   \item \begin{verbatim} let x: B <- x in x \end{verbatim}
   \item \begin{verbatim}
 case o of
-    o: Int => b;
-    o: Bool => o;
-    o: Object => true;
+	o: Int => b;
+	o: Bool => o;
+	o: Object => true;
 esac
 \end{verbatim}
+\end{enumerate}
+\begin{enumerate}
+	\item\begin{equation} \infertext {
+		\textrm{$O$(x) = SELF\_TYPE$_B$}
+	}{
+		$O$, $M$, $C$ $\vdash$ x: SELF\_TYPE$_B$
+	}\end{equation}
+
+
+	\item\begin{equation} \infertext{
+		& \textrm{$O, M, C \vdash$ x: SELF\_TYPE} 	\\
+		& \textrm{$O, M, C \vdash$ self: SELF\_TYPE} \\
+		& \textrm{SELF\_TYPE $=$ SLEF\_TYPE}
+	} {
+		$O, M, C \vdash$ x = self: Bool
+	}\end{equation}
+
+
+	\item Error, as var $i$ has type Int while var $x$ has type SELF\_TYPE
+
+
+	\item \begin{equation} \infertext {
+		& \textrm{$T_0' = $ B} \\
+		& \textrm{$O$[SELF\_TYPE/x], $M, C \vdash$ x: $SELF\_TYPE_B$} \\
+		& \textrm{B $\leq$ B $\Rightarrow$ $SELF\_TYPE_B \leq$ B} \\
+		& \textrm{$O$[$T_0'$/x], $M, C \vdash$ x: B}
+	} {
+		$O, M, C \vdash$ let x: B $\leftarrow$ x in x: B
+	} \end{equation}
+
+
+	\item\begin{equation} \infertext{
+		& \textrm{$O, M, C \vdash $ o : Object} \\
+		& \textrm{$O$ [Int/o], $M, C \vdash $ b : B} \\
+		& \textrm{$O$ [Bool/o], $M, C \vdash $ o: Object} \\
+		& \textrm{$O$ [Object/o], $M, C \vdash $ true: Bool} \\
+	} {
+		$O, M, C \vdash$ case o of ... esac: Object
+	}\end{equation}
 \end{enumerate}
 
 \medskip
@@ -90,14 +155,50 @@ esac
 (You can use Bo as the type Bool and Ob as the type Object)
 
 \begin{center}
-$O$[Bool/x] $\vdash$ \tt{x $<$- (let x:Object $<$- x in x = x): Bool}
+$O$[Bool/x] $\vdash$ \tt{x $\leftarrow$ (let x:Object $\leftarrow$ x in x = x): Bool}
 \end{center}
+To save space, let's identify some labels first:
+\begin{center}
+	$e_0$: \textrm{x $\rightarrow$ let x:Object $\leftarrow$ x in x = x}
+\end{center}
+
+
+\begin{equation}
+\infertext{
+	\infertext{
+		\infertext{
+			\infertext{
+				& \textrm{$O$[Bool/x][Object/x] $\vdash$ x : Bool} \\
+				& \textrm{$O$[Bool/x][Object/x] $\vdash$ x : Bool} \\
+				& Bool = Bool
+			} {
+				\textrm{$O$[Bool/x][Object/x] $\vdash$ x=x : Bool}
+			}
+			\begin{aligned}
+				& \textrm{$T_0'$ = Object} \\
+				& \textrm{$O$[Bool/x] $\vdash$ x: Bool} \\
+				& \textrm{Bool $\leq$ Object} \\
+			\end{aligned}
+		} {
+			$O$[Bool/x] $\vdash$ x $\rightarrow$ let x:Object $\leftarrow$ x in x = x: Bool
+		}
+	} {
+		$O$[Bool/x] $\vdash$ (x $\rightarrow$ let x:Object $\leftarrow$ x in x = x): Bool
+	} 
+	\begin{aligned}
+		& \textrm{$O$(x) = Bool } \\
+		& \textrm{Bool $\leq$ Bool} \\
+	\end{aligned}
+} {
+	$O$[Bool/x] $\vdash$ \tt{x $\rightarrow$ (x $\rightarrow$ let x:Object $\leftarrow$ x in x = x): Bool}
+}
+\end{equation}
 
 \medskip
 \item (10 pts) Suppose we extend the grammar for Cool with a ``{\bf void}'' keyword
 \begin{eqnarray*}
   expr & ::= & {\bf void} \\
-       & |   & ...
+	   & |   & ...
 \end{eqnarray*}
 
   that is analogous to {\tt null} in Java. (Currently objects are
@@ -106,22 +207,28 @@ $O$[Bool/x] $\vdash$ \tt{x $<$- (let x:Object $<$- x in x = x): Bool}
   to use {\bf void} whereever an object can be used, as in
 \begin{verbatim}
   let foo:Int <- if some_test
-                 then 5
-                 else void
-                 fi
+				 then 5
+				 else void
+				 fi
   in ...
 \end{verbatim}
 
   Give a sound typing rule that we can add to the Cool specification
   to accomodate this new keyword.
 
+\begin{equation}\infertext{
+	\textrm{$\forall$ T, Void $\leq$ T}
+} {
+	$O, M, C \vdash$ \textbf{void} : Void
+}\end{equation}
+
 \medskip
 \item  (10 pts) Suppose we extend Cool with exceptions by adding two new constructs
 to the Cool language.
 \begin{eqnarray*}
   expr & ::= & \textit{\bf try } expr \;\textit{\bf catch } ID => expr \\
-       & |   & \textit{\bf throw } expr \\
-       & | & ...
+	   & |   & \textit{\bf throw } expr \\
+	   & | & ...
 \end{eqnarray*}
 Here {\bf try}, {\bf catch} and {\bf throw} are three new terminals.
   ``${\bf throw }\;\; expr$'' returns $expr$ to the
@@ -138,8 +245,8 @@ try
    else do_something fi fi
 catch x =>
   case x of
-      x:Int => do_something1
-      x:String => do_something2
+	  x:Int => do_something1
+	  x:String => do_something2
   esac
 \end{verbatim}
 
@@ -153,6 +260,19 @@ The above program fragment executes
 
 Give a set of new sound typing rules that we can add to the Cool specification
 to accommodate these two new constructs.
+
+\begin{equation} \infertext{
+	& \textrm{ $O, M, C \vdash e_0$ : $T_0$ } \\
+	& \textrm{ $O, M, C \vdash e_1$ : $T_1$ } \\
+} {
+	\textbf{try} $e_0$ \textbf{catch} id \textbf{$\Rightarrow$} $e_1$ : $T_1 \sqcup T_2$
+}\end{equation}
+
+\begin{equation} \infertext{
+	\textrm{ $O, M, C \vdash e$ : T }	
+} {
+	\textbf{throw} $e$: T
+}\end{equation}
 
 \medskip
 \item (10 pts) The Java programming language includes arrays.  The Java
@@ -172,12 +292,12 @@ class Mammal { String name; }
 class Dog extends Mammal { void beginBarking() { ... } }
 
 class Main {
-    static public void main(String argv[]) {
-        Dog x[] = new Dog[5];
-        Mammal y[] = x;
+	static public void main(String argv[]) {
+		Dog x[] = new Dog[5];
+		Mammal y[] = x;
 
-        /* Insert code here */
-    }
+		/* Insert code here */
+	}
 }
 \end{verbatim}
 Add code to the \texttt{main} method so that the resulting program is
@@ -186,6 +306,37 @@ compile), but the program could result in an error being applied
 to an inappropriate type when executed.  Include a brief explanation
 of how your program exhibits the problem.
 
+\begin{lstlisting}
+class Main {
+	static public void main(String argv[]) {
+		Dog x[] = new Dog[5];
+		Mammal y[] = x;
+		y[0] = new Mammal(); 	// Crash. java.lang.ArrayStoreException.
+	}
+}
+class Mammal {
+	String name = "Name"; 
+}
+
+class Dog extends Mammal { 
+	void beginBarking() { 
+		System.out.println("Rua!");
+	} 
+}
+\end{lstlisting}
+
+Explaination:
+\par y[0] and x[0] are referencing to the same piece of memory. Saving an $Mammal$ instance there is fine if it were $y$ to judge, since $Mammal \leq Mammal$. But $x$ may have a problem as $Dog \leq Mammal$ can not be satisfied, as a result, an Exception is thrown.
+\par Further more, this problem cannot be static checked because line 5 writes:
+\begin{lstlisting}
+		y[0] = new Mammal();
+\end{lstlisting}
+which works perfectly fine.
+\par A easier way to think of this problem is to think y[0] as a duplicate of x[0] and replace y[0] with x[0] in that line:
+\begin{lstlisting}
+		x[0] = new Mammal();
+\end{lstlisting}
+Then immediately everyone can tell the problem.
 \medskip
 \item (10 pts) Now that you know why Java arrays are problematic, you decide to add an array construct
 to Cool with sound typing rules. An array containing objects of type A is declared as being of type
@@ -193,19 +344,44 @@ to Cool with sound typing rules. An array containing objects of type A is declar
 expression of type \textsf{Int}, specifying the size of the array.
 One can access elements in the array using
 the construct \textsf{e1[e2]} which yields the \textsf{e2}'th element in array \textsf{e1},
-and one can insert elements into the array using the notation \textsf{e1[e2] $<$- e3}.
+and one can insert elements into the array using the notation \textsf{e1[e2] $\leftarrow$ e3}.
 Finally, as in Java, an assignment from one array \textsf{a} to an
 array \textsf{b} does not make copies of the elements contained in \textsf{a}, but addresses of elements.
 
 \begin{enumerate}
   \item (2 pts) Give a sound subtype relation for arrays in Cool, i.e., state the conditions under which
 the subtype relation \textsf{Array(T)$\le$ T'} is valid.
+\begin{equation}\infertext{
+	& \textrm{ T$'$ = Array(T{''}) } \\
+	& \textrm{ T${''}$ = T}
+} {
+	\textsf{Array(T)$\le$ T'}	
+}\end{equation}
   \item Give sound typing rules that are as permissive as possible for the following constructs:
 
 \begin{enumerate}
-    \item (2 pts) \textsf{new Array[A][e]}
-    \item (2 pts) \textsf{e1[e2]}
-    \item (4 pts) \textsf{e1[e2] $<$- e3}. Assume the type of the whole expression is the type of \textsf{e1}.
+	\item (2 pts) \textsf{new Array[A][e]}
+	\begin{equation}\infertext{
+		\textrm{ O, M, C $\vdash$ e: Int}
+	} {
+		O, M, C $\vdash$ new Array[A][e]: Array[A]
+	}\end{equation}
+	\item (2 pts) \textsf{e1[e2]}
+	\begin{equation}\infertext{
+		& \textrm{ O, M, C $\vdash$ e2: Int} \\
+		& \textrm{ O, M, C $\vdash$ e1: Array[A]} \\
+	} {
+		O, M, C $\vdash$ e1[e2]: A
+	}\end{equation}
+	\item (4 pts) \textsf{e1[e2] $\rightarrow$ e3}. Assume the type of the whole expression is the type of \textsf{e1}.
+	\begin{equation}\infertext{
+		& \textrm{ O, M, C $\vdash$ e1: Array[A]} \\
+		& \textrm{ O, M, C $\vdash$ e2: Int} \\
+		& \textrm{ O, M, C $\vdash$ e3: A} \\
+	} {
+		O, M, C $\vdash$ e1[e2] $\rightarrow$ e3: Array[A]
+	}\end{equation}
+
 
 \end{enumerate}
 \end{enumerate}
