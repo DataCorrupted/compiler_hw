@@ -150,19 +150,11 @@ $n$ attributes of type $T$. \\
 $$
 \deduct{
 	\begin{array}{l}
-		\frac{\begin{array}{l}
-			class(T') = (a_1: Int \leftarrow e_1) 	\\
-			l_1 = newloc(S_1) 						\\
-			v_1 = T(a_1 = l_1) 						\\
-			S_2 = S_1[D_{T_1}/l_1] 					\\
-			\ossimple{v_1}{S_2}{[a_1: l_1]}{a_1 \leftarrow e_1}{v2}{S_3} \\
-		\end{array}}{
-			\ossimple{so}{S_1}{E}{\texttt{new T(\ttmath{e_1})}}{v_1}{S_3}		
-		} \\
-		l_1 = newloc(S_3)								\\
-		S_4 = S_3[v_1 / l_1] 							\\
+		\ossimple{so}{S_1}{E}{T[e_1]}{void}{S_2}		 \\
+		l_1 = newloc(S_2)								\\
+		S_3 = S_2[void / l_1] 							\\
 		E' = E[l_1 / a] 								\\
-		\ossimple{so}{S_4}{E'}{e_2}{v_2}{S_5} 			\\
+		\ossimple{so}{S_3}{E'}{e_2}{v_2}{S_4} 			\\
 	\end{array}
 }{
 	\ossimple{so}{S_1}{E}{\texttt{let a:T[\ttmath{e_1}] in \ttmath{e_2}}}{v_2}{S_4}\\
