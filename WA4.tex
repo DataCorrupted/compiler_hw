@@ -81,6 +81,32 @@ class C inherits B {
 \item Draw a diagram that illustrates the layout of objects of type {\tt
 A}, {\tt B} and {\tt C}, including their dispatch tables.
 
+\begin{table}[]
+	\centering
+	\caption{Object Layout}
+	\begin{tabular}{|c|c|c|c|c|}                         \hline
+		Offset & A     & B     & C     & Explanation  \\ \hline
+		0      & A tag & B tag & C tag & Class tag    \\ \hline
+		4      & 5     & 6     & 7     & Object Size  \\ \hline
+		12     & *     & *     & *     & Dispatch Ptr \\ \hline
+		16     & a1    & a1    & a1    & Attribute    \\ \hline
+		20     & a2    & a2    & a2    & Attribute    \\ \hline
+		24     & N/A   & a3    & a3    & Attribute    \\ \hline
+		28     & N/A   & N/A   & a4    & Attribute    \\ \hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption{Dispatch Table}
+	\begin{tabular}{|c|c|c|c|}               \hline
+		Offset & A      & B      & C      \\ \hline
+		0      & A.m1() & B.m1() & B.m1() \\ \hline
+		4      & A.m2() & A.m2() & C.m2() \\ \hline
+		12     &  N/A   & B.m3() & C.m3() \\ \hline
+	\end{tabular}
+\end{table}
+
 \item Let {\tt obj} be a variable whose static type is {\tt A}.  Assume
 that {\tt obj} is stored in register {\tt \$a0}.  Write MIPS code for the
 function invocation {\tt obj.2()}.  You may use temporary registers
