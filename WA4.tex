@@ -17,6 +17,9 @@
 \newcommand{\osrule}[8]{\frac{#7}{\ossimple{#1}{#2}{#3}{#4}{#5}{#6}}\eqno
   \mbox{#8}}
 
+\newcommand{\deduct}[3]{\frac{#1}{#2}\eqno\mbox{#3}}
+
+
 \begin{document}
 \begin{center}
 \Large CS131 Compilers: Writing Assignment 4\\Due Tuesday, June 12, 2018 at 23:59
@@ -81,7 +84,7 @@ class C inherits B {
 \item Draw a diagram that illustrates the layout of objects of type {\tt
 A}, {\tt B} and {\tt C}, including their dispatch tables.
 
-\begin{table}[]
+\begin{table}[ht]
 	\centering
 	\caption{Object Layout}
 	\begin{tabular}{|c|c|c|c|c|}                         \hline
@@ -96,7 +99,7 @@ A}, {\tt B} and {\tt C}, including their dispatch tables.
 	\end{tabular}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[ht]
 	\centering
 	\caption{Dispatch Table}
 	\begin{tabular}{|c|c|c|c|}               \hline
@@ -109,15 +112,21 @@ A}, {\tt B} and {\tt C}, including their dispatch tables.
 
 \item Let {\tt obj} be a variable whose static type is {\tt A}.  Assume
 that {\tt obj} is stored in register {\tt \$a0}.  Write MIPS code for the
-function invocation {\tt obj.2()}.  You may use temporary registers
+function invocation {\tt obj.m2()}.  You may use temporary registers
 such as {\tt \$t0} if you wish.
 
+\begin{lstlisting}
+	lw      $t0,    12($a0)   # Get access to dispatch table.
+	lw      $t0,    4($t0) 	  # Get function pointer
+	jal     $t0               # This doesn't seem right.
+\end{lstlisting}
 \item Explain what happens in part (b) if {\tt obj} has dynamic type {\tt
 B}.
 
+When {\tt obj} has dynamic type B, the processor will look for B's dispatch table and call the function listed inside, even though they may be the same function that is inherited from A.
 \end{enumerate}
 
-\medskip
+\pagebreak
 
 \item (10 pts)
 Suppose you wish to add arrays to Cool using the following syntax:
@@ -135,7 +144,28 @@ Suppose you wish to add arrays to Cool using the following syntax:
 
 Write the operational semantics for these three syntactic constructs. You
 may find it helpful to think of an array of type $T[n]$ as an object with
-$n$ attributes of type $T$.
+$n$ attributes of type $T$. \\
+
+\texttt{let a:T[\ttmath{e_1}] in \ttmath{e_2}} \\
+$$
+\deduct{
+	\begin{array}{l}
+		\ossimple{so}{S_1}{E}{new T(e_1)}{v_1}{S_2}		\\
+		l_1 = newloc(S_2)								\\
+		S_3 = S_2[v_1 / l_1] 							\\
+		E' = E[l_1 / a] 								\\
+		\ossimple{so}{S_3}{E'}{e_2}{v_2}{S_4} 			\\
+	\end{array}
+}{
+	\ossimple{so}{S_1}{E}{\texttt{let a:T[\ttmath{e_1}] in \ttmath{e_2}}}{v_2}{S_4}\\
+}{
+	[Let-Array]}
+$$
+
+
+
+\texttt{a[\ttmath{e_1}] <- \ttmath{e_2}} \\
+\texttt{a[e]} \\
 
 \pagebreak
 
