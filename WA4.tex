@@ -162,10 +162,31 @@ $$
 	[Let-Array]}
 $$
 
-
-
-\texttt{a[\ttmath{e_1}] <- \ttmath{e_2}} \\
+\texttt{a[\ttmath{e_1}] \ttmath{\leftarrow e_2}} \\
+$$
+\deduct{
+	\begin{array}{l}
+		\ossimple{so}{S_1}{E}{e_2}{v}{S_2}	\\
+		E(a[e_1]) = l_a 					\\
+		S = S_1[v/l_a]						\\
+	\end{array}
+}{
+	\ossimple{so}{S_1}{E}{\texttt{a[\ttmath{e_1}] \ttmath{\leftarrow e_2}} } {v}{S} \\
+}{
+	[Assign-Array]
+}
+$$
 \texttt{a[e]} \\
+$$\deduct{
+	\begin{array}{l}
+		E(a[e]) = l_a 	\\
+		S(l_a) = v 		\\
+	\end{array}	
+}{
+	\ossimple{so}{S_1}{E}{\texttt{a[e]}}{v}{S} \\	
+}{
+	[Reference-Array]
+}$$
 
 \pagebreak
 
@@ -243,6 +264,19 @@ end_if:
         lw    $fp 0($sp)
         jr    $ra
 \end{verbatim}
+
+\begin{lstlisting}
+void fib(const unsigned int a){
+    if (a == 0){
+        return 0;
+    } else {
+        int temp = a - 1;
+        return fib(temp) + temp;
+    }
+}
+\end{lstlisting}
+
+\pagebreak
 
 \item (10 pts) Give a recursive definition of the cgen function for the following new construct.
 \begin{eqnarray*}
