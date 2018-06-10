@@ -398,10 +398,36 @@ L2: e := e + f 			# {b, d, e}
     goto L4				# 
 L3: e := e + 2			# {b, d, e}		
 L4: d := d + 4			# {b, d, e}		
-    b := b - 4			# {}		
-    if b != d goto L1	# {}		
-L5:						# 
+    b := b - 4			# {b, d, e}		
+    if b != d 			# {b, d, e} 
+    	goto L1	# {}	# {b, d, e}
+L5:						# {e}
 \end{lstlisting}
+
+\begin{center}\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+	\node[state] 			(c) 						{$c$};
+	\node[state] 			(a) 	[above right=of c]	{$a$};
+	\node[state]			(e) 	[below right=of c] 	{$e$};
+	\node[state] 			(b) 	[	   right=of a] 	{$b$};
+	\node[state] 			(d) 	[below right=of b] 	{$d$};
+	\node[state] 			(f) 	[	   right=of e]	{$f$};
+	\path[-]
+	(a) 	edge	node	{} 		(b)
+			edge	node	{} 		(c)
+			edge	node	{} 		(d)
+			edge	node	{} 		(e)
+	(b) 	edge	node	{} 		(c)
+			edge	node	{} 		(d)
+			edge	node	{} 		(e)
+			edge	node	{} 		(f)
+	(c)		edge	node	{} 		(d)
+			edge	node	{} 		(e)
+			edge	node	{} 		(f)
+	(d) 	edge	node	{} 		(e)
+			edge	node	{} 		(f)
+	(e) 	edge	node	{} 		(f);
+\end{tikzpicture}\end{center}
+
 
 \pagebreak
 
@@ -420,7 +446,7 @@ class Main {
   main() : Object {
     let a : C <- new C, b :C <- new C, c : C<- new C, d : C <- new C,
     e : C <- new C, f :C <- new C, g : C <- new C, h : C <- new C in {
-      f.sety(g), a.setxy(e, c); b.setx(f); g.setxy(f,d); c.sety(h); h.setxy(e, a); x <- c;
+      f.sety(g); a.setxy(e, c); b.setx(f); g.setxy(f,d); c.sety(h); h.setxy(e, a); x <- c;
     }
   };
 };
