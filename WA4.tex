@@ -1,6 +1,7 @@
 \documentclass[10pt]{article}
 \usepackage[pdftex]{graphicx, color}
 \usepackage{listings}
+\usepackage{amsmath}
 
 \usepackage{tikz}
 \usetikzlibrary{automata,positioning}
@@ -318,6 +319,31 @@ just before the for loop.
 Any occurrence of variable $i$ in expression $e_4$ refers to the loop index variable $i$.
 
 
+\begin{equation}\begin{aligned}
+	  & \text{cgen}(\tt{for}\;\; i = e_1 \;\;to\;\; e_2 \;\;\tt{by}\;\; e_3 \;\;\tt{do }\;\; e_4) \\
+	= & \text{cgen} (e_1) 		\\
+	  & \$a1 \leftarrow \$a0	\\
+	  & \text{cgen} (e_2) 		\\
+	  & \$a2 \leftarrow \$a0	\\
+	  & \text{cgen} (e_3) 		\\
+	  & \$a3 \leftarrow \$a0	\\
+	  & \text{push } \$a1 		\\
+	\text{Loop: } \\
+	  & \$t0 \leftarrow top 	\\
+	  & \text{bge } \$a2 \text{ } \$t0 \text{ true\_branch} \\
+	\text{false\_branch: }  \\
+	  & \text{b EndLoop}		\\
+	\text{true\_branch: }	\\
+	  & \text{cgen} (e_4) 		\\
+	  & \text{pop} 				\\
+	  & \text{addiu } \$t0, \$t0, \$a3 	\\
+	  & \text{push } \$t0 		\\
+	  & \text{b Loop} 			\\
+	\text{EndLoop: } 		\\
+\end{aligned}\end{equation}
+
+\pagebreak
+
 \item (2*10=20 pts) Consider the following program:
 
 \begin{verbatim}
@@ -355,6 +381,29 @@ spill code is necessary.  Use the pseudo-instructions \texttt{load x}
 and \texttt{store x} to load and spill the value of \texttt{x} from
 memory.
 \end{enumerate}
+
+We will start by compute the set of live vars first:
+
+\begin{lstlisting}[tabsize=4]
+L0: e := 0 				# {e}		 
+    b := 1;				# {b, d}		
+    d := 2;				# {b, d, e}		
+L1: a := b+2			# {a, b, d, e}		
+    c := d+5			# {a, b, c, d, e}		
+    e := e + c 			# {a, b, c, d, e}		
+    f := a * a 			# {b, c, d, e, f}		
+    if f < c 			# {b, d, e, f}		
+    	goto L3			# {b, d, e}		
+L2: e := e + f 			# {b, d, e}		
+    goto L4				# 
+L3: e := e + 2			# {b, d, e}		
+L4: d := d + 4			# {b, d, e}		
+    b := b - 4			# {}		
+    if b != d goto L1	# {}		
+L5:						# 
+\end{lstlisting}
+
+\pagebreak
 
 \item (10*3=30 pts) Consider the following Cool program:
 
