@@ -475,11 +475,77 @@ class Main {
 			edge 	[bend left] 	node 	{} 		(a);
 \end{tikzpicture}\end{center}
 
-  \item (10 pts) For each of the garbage collection algorithms discussed in class (Mark and Sweep, Stop and Copy,
-Reference Counting), show the heap after garbage collection.
-%
-  \item (10 pts) Which technique performed the worst for the above program ? Describe why the technique failed to
-reclaim the memory occupied by one or more heap variables which are no longer reachable.
+  \item (10 pts) For each of the garbage collection algorithms discussed in class (Mark and Sweep, Stop and Copy, Reference Counting), show the heap after garbage collection.
+
+\textbf{Mark and Sweep} \\
+\begin{center}\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+	\node[state] 			(a) 					{$a$};
+	\node[state] 			(b) 	[right=of a]	{$deleted$};
+	\node[state]			(c) 	[right=of b] 	{$c$};
+	\node[state] 			(d) 	[right=of c] 	{$deleted$};
+	\node[state] 			(e) 	[right=of d] 	{$e$};
+	\node[state] 			(f) 	[right=of e]	{$deleted$};
+	\node[state] 			(g) 	[right=of f]	{$deleted$};
+	\node[state] 			(h) 	[right=of g]	{$h$};
+	\path[->]
+	(a) 	edge	[bend left]		node 	{} 		(e)
+			edge	[bend left] 	node 	{} 		(c)
+	(c)		edge	[bend left] 	node 	{} 		(h)
+	(h) 	edge 	[bend left] 	node 	{} 		(e)
+			edge 	[bend left] 	node 	{} 		(a);
+\end{tikzpicture}\end{center}
+
+\textbf{Stop and Copy} \\
+\begin{center}\begin{tikzpicture}[shorten >=1pt,node distance=1cm,on grid,auto]
+	\node[state] 			(oa) 					{$Old$};
+	\node[state] 			(ob) 	[right=of oa]	{$Old$};
+	\node[state]			(oc) 	[right=of ob]	{$Old$};
+	\node[state] 			(od) 	[right=of oc]	{$Old$};
+	\node[state] 			(oe) 	[right=of od]	{$Old$};
+	\node[state] 			(of) 	[right=of oe]	{$Old$};
+	\node[state] 			(og) 	[right=of of]	{$Old$};
+	\node[state] 			(oh) 	[right=of og]	{$Old$};
+	\node[state] 			(a) 	[right=of oh]	{$a$};
+	\node[state]			(c) 	[right=2cm of a] 	{$c$};
+	\node[state] 			(e) 	[right=2cm of c] 	{$e$};
+	\node[state] 			(h) 	[right=2cm of e]	{$h$};
+	\path[->]
+	(a) 	edge	[bend left]		node 	{} 		(e)
+			edge	[bend left] 	node 	{} 		(c)
+	(c)		edge	[bend left] 	node 	{} 		(h)
+	(h) 	edge 	[bend left] 	node 	{} 		(e)
+			edge 	[bend left] 	node 	{} 		(a);
+\end{tikzpicture}\end{center}
+
+\textbf{Reference Counting} \\
+\begin{center}\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+	\node[state] 			(a) 					{$a_1$};
+	\node[state] 			(b) 	[right=of a]	{$deleted$};
+	\node[state]			(c) 	[right=of b] 	{$c_1$};
+	\node[state] 			(d) 	[right=of c] 	{$d_1$};
+	\node[state] 			(e) 	[right=of d] 	{$e_2$};
+	\node[state] 			(f) 	[right=of e]	{$f_1$};
+	\node[state] 			(g) 	[right=of f]	{$g_1$};
+	\node[state] 			(h) 	[right=of g]	{$h_1$};
+	\path[->]
+	(a) 	edge	[bend left]		node 	{} 		(e)
+			edge	[bend left] 	node 	{} 		(c)
+	(c)		edge	[bend left] 	node 	{} 		(h)
+	(f) 	edge	[bend left] 	node 	{} 		(g)
+	(g) 	edge	[bend left] 	node 	{} 		(f)
+			edge	[bend left] 	node 	{} 		(d)
+	(h) 	edge 	[bend left] 	node 	{} 		(e)
+			edge 	[bend left] 	node 	{} 		(a);
+\end{tikzpicture}\end{center}
+
+  \item (10 pts) Which technique performed the worst for the above program ? Describe why the technique failed to reclaim the memory occupied by one or more heap variables which are no longer reachable.
+
+\par
+"performed" is a rather vague word when used alone. We will analysis in terms of space performance and time performance.
+\par
+\textbf{Space Performance} Reference counting performed the worth as it failed to remove all the garbage. This is due to it's counting mechanism, where one piece of memory, no matter used or not, can not be deleted as long as someone else is referencing it.
+
+\textbf{Time Performance} Stop and Copy consumes the most time. It is deleting by coping the useful data to a new place and leave the useless behind. Yet this behavior is time consuming because delete is cheap, copy all the data verbatim is expensive.
 \end{enumerate}
 \end{enumerate}
 \end{document}
