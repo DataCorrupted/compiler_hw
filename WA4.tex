@@ -453,7 +453,28 @@ class Main {
 \end{verbatim}
 \begin{enumerate}
   \item (10 pts) Draw the heap at the end of execution of the above program, identifying objects by the variable names to which they are bound in the let expression. Assume that the root is the Main object created at the start of the program, and this object is not in the heap (note that Main is pointing to c).
-%
+
+\begin{center}\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+	\node[state] 			(a) 					{$a$};
+	\node[state] 			(b) 	[right=of a]	{$b$};
+	\node[state]			(c) 	[right=of b] 	{$c$};
+	\node[state] 			(d) 	[right=of c] 	{$d$};
+	\node[state] 			(e) 	[right=of d] 	{$e$};
+	\node[state] 			(f) 	[right=of e]	{$f$};
+	\node[state] 			(g) 	[right=of f]	{$g$};
+	\node[state] 			(h) 	[right=of g]	{$h$};
+	\path[->]
+	(a) 	edge	[bend left]		node 	{} 		(e)
+			edge	[bend left] 	node 	{} 		(c)
+	(b)		edge	[bend left] 	node 	{} 		(f)
+	(c)		edge	[bend left] 	node 	{} 		(h)
+	(f) 	edge	[bend left] 	node 	{} 		(g)
+	(g) 	edge	[bend left] 	node 	{} 		(f)
+			edge	[bend left] 	node 	{} 		(d)
+	(h) 	edge 	[bend left] 	node 	{} 		(e)
+			edge 	[bend left] 	node 	{} 		(a);
+\end{tikzpicture}\end{center}
+
   \item (10 pts) For each of the garbage collection algorithms discussed in class (Mark and Sweep, Stop and Copy,
 Reference Counting), show the heap after garbage collection.
 %
