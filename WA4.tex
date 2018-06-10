@@ -541,7 +541,7 @@ class Main {
   \item (10 pts) Which technique performed the worst for the above program ? Describe why the technique failed to reclaim the memory occupied by one or more heap variables which are no longer reachable.
 
 \par
-"performed" is a rather vague word when used alone. We will analysis in terms of space performance and time performance.
+Performance is a rather vague word when used alone. We will analysis in terms of space performance and time performance.
 \par
 \textbf{Space Performance} Reference counting performed the worth as it failed to remove all the garbage. This is due to it's counting mechanism, where one piece of memory, no matter used or not, can not be deleted as long as someone else is referencing it.
 
