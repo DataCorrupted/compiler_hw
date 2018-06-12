@@ -434,7 +434,7 @@ L3: e := e + 2			# {b, d, e}
 L4: d := d + 4			# {b, d, e}		
     b := b - 4			# {b, d, e}		
     if b != d 			# {b, d, e} 
-    	goto L1	# {}	# {b, d, e}
+    	goto L1			# {b, d, e}
 L5:						# {e}
 \end{lstlisting}
 
