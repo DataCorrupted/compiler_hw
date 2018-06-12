@@ -359,18 +359,21 @@ Any occurrence of variable $i$ in expression $e_4$ refers to the loop index vari
 \begin{equation}\begin{aligned}
 	  & \text{cgen}(\tt{for}\;\; i = e_1 \;\;to\;\; e_2 \;\;\tt{by}\;\; e_3 \;\;\tt{do }\;\; e_4) \\
 	= & \text{cgen} (e_1) 		\\
-	  & \$a1 \leftarrow \$a0	\\
+	  & \text{push } (acc)	\\
 	  & \text{cgen} (e_2) 		\\
-	  & \$a2 \leftarrow \$a0	\\
+	  & \text{push } (acc)	\\
 	  & \text{cgen} (e_3) 		\\
-	  & \$a3 \leftarrow \$a0	\\
-	  & \text{push } \$a1 		\\
+	  & \$s3 \leftarrow \$acc	\\
+	  & \text{pop} 				\\
+	  & \$s2 \leftarrow \$acc	\\
+	  & \text{pop} 				\\
 	\text{Loop: } \\
 	  & \$t0 \leftarrow top 	\\
-	  & \text{bgt } \$t0 \text{ } \$a2 \text{ EndLoop} \\
+	  & \text{pop } 			\\
+	  & \text{bgt } \$t0 \text{ } \$s2 \text{ EndLoop} \\
 	  & \text{cgen} (e_4) 		\\
 	  & \text{pop} 				\\
-	  & \text{addiu } \$t0, \$t0, \$a3 	\\
+	  & \text{addiu } \$t0, \$t0, \$s3 	\\
 	  & \text{push } \$t0 		\\
 	  & \text{b Loop} 			\\
 	\text{EndLoop: } 		\\
