@@ -92,11 +92,11 @@ A}, {\tt B} and {\tt C}, including their dispatch tables.
 		Offset & A     & B     & C     & Explanation  \\ \hline
 		0      & A tag & B tag & C tag & Class tag    \\ \hline
 		4      & 5     & 6     & 7     & Object Size  \\ \hline
-		12     & *     & *     & *     & Dispatch Ptr \\ \hline
-		16     & a1    & a1    & a1    & Attribute    \\ \hline
-		20     & a2    & a2    & a2    & Attribute    \\ \hline
-		24     & N/A   & a3    & a3    & Attribute    \\ \hline
-		28     & N/A   & N/A   & a4    & Attribute    \\ \hline
+		8      & *     & *     & *     & Dispatch Ptr \\ \hline
+		12     & a1    & a1    & a1    & Attribute    \\ \hline
+		16     & a2    & a2    & a2    & Attribute    \\ \hline
+		20     & N/A   & a3    & a3    & Attribute    \\ \hline
+		24     & N/A   & N/A   & a4    & Attribute    \\ \hline
 	\end{tabular}
 \end{table}
 
@@ -107,7 +107,7 @@ A}, {\tt B} and {\tt C}, including their dispatch tables.
 		Offset & A      & B      & C      \\ \hline
 		0      & A.m1() & B.m1() & B.m1() \\ \hline
 		4      & A.m2() & A.m2() & C.m2() \\ \hline
-		12     &  N/A   & B.m3() & C.m3() \\ \hline
+		8      &  N/A   & B.m3() & C.m3() \\ \hline
 	\end{tabular}
 \end{table}
 
@@ -117,9 +117,9 @@ function invocation {\tt obj.m2()}.  You may use temporary registers
 such as {\tt \$t0} if you wish.
 
 \begin{lstlisting}
-	lw      $t0,    12($a0)   # Get access to dispatch table.
+	lw      $t0,    8($a0)   # Get access to dispatch table.
 	lw      $t0,    4($t0) 	  # Get function pointer
-	jal     $t0               # This doesn't seem right.
+	jalr    $t0               
 \end{lstlisting}
 \item Explain what happens in part (b) if {\tt obj} has dynamic type {\tt
 B}.
@@ -221,6 +221,43 @@ if {\tt x} $\geq$ 10.
 Write new operational rules for the {\tt while} construct that formalize
 these alternative semantics.
 
+$$\deduct{
+	\begin{array}{l}
+		\ossimple{so}{S_1}{E}{e_1}{Bool(false)}{S_2}\\
+	\end{array}	
+}{
+	\ossimple{so}{S_1}{E}{\texttt{while \ttmath{e_1} loop \ttmath{e_2} pool}}{void}{S_2} \\	
+}{
+	[Loop-False]
+}$$
+\\
+$$\deduct{
+	\begin{array}{l}
+		\ossimple{so}{S}{E}{e_1}{Bool(true)}{S_1} \\
+		\ossimple{so}{S_1}{E}{e_2}{v}{S_2} \\
+		\ossimple{so}{S_2}{E}{e_1}{Bool(false)}{S_3} \\
+
+	\end{array}
+}{
+	\ossimple{so}{S}{E}{\texttt{while \ttmath{e_1} loop \ttmath{e_2} pool}}{v}{S_3} \\		
+}{
+	[Loop-Last]
+}$$
+\\
+$$ \deduct{
+	\begin{array}{l}
+		\ossimple{so}{S}{E}{e_1}{Bool(true)}{S_1} \\
+		\ossimple{so}{S_1}{E}{e_2}{v_1}{S_2} \\	
+		\ossimple{so}{S_2}{E}{e_1}{Bool(true)}{S_4} \\	
+		\ossimple{so}{S}{E}{\texttt{while \ttmath{e_1} loop \ttmath{e_2} pool}}{v_2}{S_4} \\		
+	\end{array}
+}{
+	\ossimple{so}{S}{E}{\texttt{while \ttmath{e_1} loop \ttmath{e_2} pool}}{v_2}{S_4} \\			
+}{
+	[Loop-True]
+} $$
+
+\pagebreak
 
 \item (10 pts) Consider the following MIPS assembly code program.  Using the
 stack-machine based code generation rules from lecture, what source program produces this
@@ -330,10 +367,7 @@ Any occurrence of variable $i$ in expression $e_4$ refers to the loop index vari
 	  & \text{push } \$a1 		\\
 	\text{Loop: } \\
 	  & \$t0 \leftarrow top 	\\
-	  & \text{bge } \$a2 \text{ } \$t0 \text{ true\_branch} \\
-	\text{false\_branch: }  \\
-	  & \text{b EndLoop}		\\
-	\text{true\_branch: }	\\
+	  & \text{bgt } \$t0 \text{ } \$a2 \text{ EndLoop} \\
 	  & \text{cgen} (e_4) 		\\
 	  & \text{pop} 				\\
 	  & \text{addiu } \$t0, \$t0, \$a3 	\\
